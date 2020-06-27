@@ -87,6 +87,12 @@ python data_augmentation.py --pretrained_bert_model ${BERT_BASE_DIR}$ \
 ```
 Before running data augmentation of GLUE tasks you should download the [GLUE data](https://gluebenchmark.com/tasks) by running [this script](https://gist.github.com/W4ngatang/60c2bdb54d156a41194446737ce03e2e) and unpack it to some directory GLUE_DIR. And TASK_NAME can be one of CoLA, SST-2, MRPC, STS-B, QQP, MNLI, QNLI, RTE.
 
+The script below executes an example on the task SST-2 :
+
+```
+./data-augmentation-SST-2.sh
+```
+
 Task-specific Distillation
 ==========================
 In the task-specific distillation, we re-perform the proposed Transformer distillation to further improve TinyBERT by focusing on learning the task-specific knowledge. 
