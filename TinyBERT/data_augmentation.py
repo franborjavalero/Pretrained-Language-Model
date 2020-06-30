@@ -211,25 +211,25 @@ class DataAugmentor(object):
 
 
 class AugmentProcessor(object):
-    def __init__(self, augmentor, glue_dir, task_name):
+    def __init__(self, augmentor, corpus):
         self.augmentor = augmentor
-        self.glue_dir = glue_dir
-        self.task_name = task_name
+        self.corpus = corpus
         self.augment_ids = {'MRPC': [3, 4], 'MNLI': [8, 9], 'CoLA': [3], 'SST-2': [0],
-                            'STS-B': [7, 8], 'QQP': [3, 4], 'QNLI': [1, 2], 'RTE': [1, 2]}
+                            'STS-B': [7, 8], 'QQP': [3, 4], 'QNLI': [1, 2], 'RTE': [1, 2],
+                            'SNIPS': [0], 'TREC': [0], 'RAIC': [0], 'RAIT': [0],}
 
         self.filter_flags = { 'MRPC': True, 'MNLI': True, 'CoLA': False, 'SST-2': True,
-                              'STS-B': True, 'QQP': True, 'QNLI': True, 'RTE': True}
+                              'STS-B': True, 'QQP': True, 'QNLI': True, 'RTE': True,
+                              'SNIPS': True, 'TREC': True, 'RAIC': True, 'RAIT': True,}
 
-        assert self.task_name in self.augment_ids
+        assert self.corpus in self.augment_ids
 
-    def read_augment_write(self):
-        task_dir = os.path.join(self.glue_dir, self.task_name)
-        train_samples = _read_tsv(os.path.join(task_dir, "train.tsv"))
-        output_filename = os.path.join(task_dir, "train_aug.tsv")
+    def read_augment_write(self, input_fname, output_fame):
+        train_samples = _read_tsv(f"{input_fname}.tsv")
+        output_filename = f"{output_fame}.tsv"
 
-        augment_ids_ = self.augment_ids[self.task_name]
-        filter_flag = self.filter_flags[self.task_name]
+        augment_ids_ = self.augment_ids[self.corpus]
+        filter_flag = self.filter_flags[self.corpus]
 
         with open(output_filename, 'w', newline='', encoding="utf-8") as f:
             writer = csv.writer(f, delimiter="\t")
@@ -256,10 +256,12 @@ def main():
                         help="Downloaded pretrained model (bert-base-uncased) is under this folder")
     parser.add_argument("--glove_embs", default=None, type=str, required=True,
                         help="Glove word embeddings file")
-    parser.add_argument("--glue_dir", default=None, type=str, required=True,
-                        help="GLUE data dir")
     parser.add_argument("--task_name", default=None, type=str, required=True,
                         help="Task(eg. CoLA, SST-2) that we want to do data augmentation for its train set")
+    parser.add_argument("--input_fname", default=None, type=str, required=True,
+                        help="The name of the tsv file containing the input data")
+    parser.add_argument("--output_fname", default=None, type=str, required=True,
+                        help="The name of the tsv file containing the agumented data")
     parser.add_argument("--N", default=30, type=int,
                         help="How many times is the corpus expanded?")
     parser.add_argument("--M", default=15, type=int,
@@ -268,22 +270,7 @@ def main():
                         help="Threshold probability p to replace current word")
 
     args = parser.parse_args()
-    # logger.info(args)
-
-    default_params = {
-        "CoLA": {"N": 30},
-        "MNLI": {"N": 10},
-        "MRPC": {"N": 30},
-        "SST-2": {"N": 20},
-        "STS-b": {"N": 30},
-        "QQP": {"N": 10},
-        "QNLI": {"N": 20},
-        "RTE": {"N": 30}
-    }
-
-    if args.task_name in default_params:
-        args.N = default_params[args.task_name]["N"]
-
+    
     # Prepare data augmentor
     tokenizer = BertTokenizer.from_pretrained(args.pretrained_bert_model)
     model = BertForMaskedLM.from_pretrained(args.pretrained_bert_model)
@@ -294,8 +281,8 @@ def main():
     data_augmentor = DataAugmentor(model, tokenizer, emb_norm, vocab, ids_to_tokens, args.M, args.N, args.p)
 
     # Do data augmentation
-    processor = AugmentProcessor(data_augmentor, args.glue_dir, args.task_name)
-    processor.read_augment_write()
+    processor = AugmentProcessor(data_augmentor, args.task_name)
+    processor.read_augment_write(args.input_fname, args.output_fname)
 
 
 if __name__ == "__main__":
