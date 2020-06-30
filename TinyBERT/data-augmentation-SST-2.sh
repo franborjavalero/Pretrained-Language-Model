@@ -36,4 +36,9 @@ fi
 
 # Data augmetation
 TASK_NAME="SST-2"
-python3 data_augmentation.py --pretrained_bert_model ${BERT_DIR} --glove_embs ${GLOVE_EMB} --glue_dir ${GLUE_DIR} --task_name ${TASK_NAME}
+INPUT_FNAME="./glue_data/SST-2/train"
+OUTPUT_FNAME="./glue_data/SST-2/train_aug"
+N=30
+M=15
+p=0.4
+python3 data_augmentation.py --pretrained_bert_model ${BERT_DIR} --glove_embs ${GLOVE_EMB} --task_name ${TASK_NAME} --input_fname ${INPUT_FNAME} --output_fname ${OUTPUT_FNAME} --N $N --M $M --p $p
