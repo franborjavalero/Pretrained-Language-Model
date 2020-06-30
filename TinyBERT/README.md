@@ -81,9 +81,10 @@ Use `data_augmentation.py` to run data augmentation and the augmented dataset `t
 
 python data_augmentation.py --pretrained_bert_model ${BERT_BASE_DIR}$ \
                             --glove_embs ${GLOVE_EMB}$ \
+                            --task_name ${TASK_NAME}$ \
                             --glue_dir ${GLUE_DIR}$ \  
-                            --task_name ${TASK_NAME}$
-
+                            --input_fname ${INPUT_FNAME} \  
+                            --output_fname ${OUTPUT_FNAME}
 ```
 Before running data augmentation of GLUE tasks you should download the [GLUE data](https://gluebenchmark.com/tasks) by running [this script](https://gist.github.com/W4ngatang/60c2bdb54d156a41194446737ce03e2e) and unpack it to some directory GLUE_DIR. And TASK_NAME can be one of CoLA, SST-2, MRPC, STS-B, QQP, MNLI, QNLI, RTE.
 
