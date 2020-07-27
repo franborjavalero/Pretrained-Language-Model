@@ -216,11 +216,11 @@ class AugmentProcessor(object):
         self.corpus = corpus
         self.augment_ids = {'MRPC': [3, 4], 'MNLI': [8, 9], 'CoLA': [3], 'SST-2': [0],
                             'STS-B': [7, 8], 'QQP': [3, 4], 'QNLI': [1, 2], 'RTE': [1, 2],
-                            'SNIPS': [0], 'TREC': [0], 'RAIC': [0], 'RAIT': [0],}
+                            'SNIPS': [0], 'TREC': [0], 'RAIC': [0], 'RAIT': [0], 'Question-Topic':[0]}
 
         self.filter_flags = { 'MRPC': True, 'MNLI': True, 'CoLA': False, 'SST-2': True,
                               'STS-B': True, 'QQP': True, 'QNLI': True, 'RTE': True,
-                              'SNIPS': True, 'TREC': True, 'RAIC': True, 'RAIT': True,}
+                              'SNIPS': True, 'TREC': True, 'RAIC': True, 'RAIT': True, 'Question-Topic':True}
 
         assert self.corpus in self.augment_ids
 
